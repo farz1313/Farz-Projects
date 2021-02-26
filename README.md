@@ -17,15 +17,53 @@ In this project, I analysed customer-level data of a leading telecom firm, build
 </details>
 
 <details>
-<summary>Click to toggle contents of `code`</summary>
-```
-CODE!
-```
+<summary>ADVANCED SQL</summary>
+<p>
+The dataset provided here was extracted from the NSE website. The Stock price data provided is from 1-Jan-2015 to 31-July-2018 for six stocks Eicher Motors, Hero, Bajaj Auto, TVS Motors, Infosys and TCS. I analysed and wrote a brief summary of the results obtained and what inferences you can draw from the analysis performed.
+    
+</p>
+</details>
+
+<details>
+<summary>CAPSTONE PROJECT</summary>
+<p>
+Inspiration 
+<br>
+Identify fraudulent credit card transactions. Given the class imbalance ratio, we recommend measuring the accuracy using the Area Under the Precision-Recall Curve (AUPRC). Confusion matrix accuracy is not meaningful for unbalanced classification.
+</br>
+<br>
+Problem Statement
+The aim of this project is to predict fraudulent credit card transactions using machine learning models.
+</br>
+<br>
+Actions and final objective
+1. The model will be trained on data which comprises of label feature that gives an information about a transaction, 1 for fraud, and 0 for good transaction.
+2. Transactions lying in outliers will be considered to be fraud.
+3. Recall scores will be used to evaluate model performance.
+</br>
+</p>
 </details>
 
 <details>
 <summary>Click to toggle contents of `code`</summary>
-```
-CODE!
-```
+<p>
+
+
+</p>
+</details>
+
+<details>
+<summary>Click to toggle contents of `code`</summary>
+<p>
+
+
+</p>
+</details>
+
+<details>
+<summary>Click to toggle contents of `code`</summary>
+<p>
+
+
+</p>
 </details>
