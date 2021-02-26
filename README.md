@@ -32,11 +32,12 @@ Inspiration
 Identify fraudulent credit card transactions. Given the class imbalance ratio, we recommend measuring the accuracy using the Area Under the Precision-Recall Curve (AUPRC). Confusion matrix accuracy is not meaningful for unbalanced classification.
 </br>
 <br>
-Problem Statement
-The aim of this project is to predict fraudulent credit card transactions using machine learning models.
+Problem Statement-The aim of this project is to predict fraudulent credit card transactions using machine learning models.
 </br>
 <br>
 Actions and final objective
+</br>
+<br>
 1. The model will be trained on data which comprises of label feature that gives an information about a transaction, 1 for fraud, and 0 for good transaction.
 2. Transactions lying in outliers will be considered to be fraud.
 3. Recall scores will be used to evaluate model performance.
@@ -45,25 +46,24 @@ Actions and final objective
 </details>
 
 <details>
-<summary>Click to toggle contents of `code`</summary>
+<summary>DEEP LEARNING NEURAL NETWORK</summary>
 <p>
-
+In this assignment, I implemented an L-layered deep neural network and train it on the MNIST dataset. The MNIST dataset contained scanned images of handwritten digits, along with their correct classification labels (between 0-9). MNIST's name comes from the fact that it is a modified subset of two data sets collected by NIST, the United States' National Institute of Standards and Technology.
 
 </p>
 </details>
 
 <details>
-<summary>Click to toggle contents of `code`</summary>
+<summary>EDA</summary>
 <p>
-
-
+Used EDA to analyse the patterns present in the data to ensure that the applicants are capable of repaying the loan are not rejected. Understood how consumer attributes and loan attributes influence the tendency of default.
 </p>
 </details>
 
 <details>
-<summary>Click to toggle contents of `code`</summary>
+<summary>MACHINE LEARNING</summary>
 <p>
-
+Business Goal- I modeled the price of cars with the available independent variables. It was used by the management to understand how exactly the prices vary with the independent variables. They can accordingly manipulate the design of the cars, the business strategy etc. to meet certain price levels. Further, the model will be a good way for management to understand the pricing dynamics of a new market.
 
 </p>
 </details>
