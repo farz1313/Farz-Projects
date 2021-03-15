@@ -62,6 +62,22 @@ In this assignment, I implemented an L-layered deep neural network and train it 
 </details>
 
 <details>
+<summary> REAL-TIME-INSIGHTS-FROM-SOCIAL-MEDIA-DATA</summary>
+<BR><p> 
+Learned to analyze Twitter data and do a deep dive into a hot trend.
+</br></p>
+  Topics <br>
+1. Data Manipulation
+2. Data Visualization
+3. Probability & Statistics
+4. Importing & Cleaning Data</p>
+<br>
+Project Description<br>
+In this Project, I used pre-downloaded datasets to understand the nuts and bolts of Twitter Data. In particular, I did analysis of a hot-trend.  
+</details>
+  
+
+<details>
 <summary>EDA</summary>
 <p>
 Used EDA to analyse the patterns present in the data to ensure that the applicants are capable of repaying the loan are not rejected. Understood how consumer attributes and loan attributes influence the tendency of default.
