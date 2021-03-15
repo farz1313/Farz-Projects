@@ -62,7 +62,7 @@ In this assignment, I implemented an L-layered deep neural network and train it 
 </details>
 
 <details>
-<summary> REAL-TIME-INSIGHTS-FROM-SOCIAL-MEDIA-DATA</summary>
+<summary> REAL TIME INSIGHTS FROM SOCIAL MEDIA DATA</summary>
 <BR><p> 
 Learned to analyze Twitter data and do a deep dive into a hot trend.
 </br></p>
