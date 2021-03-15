@@ -91,3 +91,19 @@ Business Goal- I modeled the price of cars with the available independent variab
 
 </p>
 </details>
+
+<details>
+<summary> PROJECT: THE HOTTEST TOPICS IN MACHINE LEARNING</summary>
+<BR><p> 
+Analyzed machine learning topics in Neural Information Processing Systems conference.
+</br></p>
+  Topics <br>
+1. Data Manipulation
+2. Data Visualization
+3. Machine Learning
+4. Probability & Statistics
+5. Importing & Cleaning Data</p>
+<br>
+Project Description<br>
+Neural Information Processing Systems (NIPS) is one of the top machine learning conferences in the world where groundbreaking work is published. In this Project, I analyzed a large collection of NIPS research papers from the past decade to discover the latest trends in machine learning. I performed Natural Language Processing using Python, pandas, sklearn, and the latent Dirichlet allocation (LDA) method on NIPS papers to uncover the trendiest topics in machine learning research.
+</details>
