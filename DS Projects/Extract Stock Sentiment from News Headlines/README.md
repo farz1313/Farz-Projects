@@ -5,10 +5,10 @@ Datacamp project
 Extract Stock Sentiment from News Headlines
 <p><br>
   Topics <br>
-Data Manipulation
-Data Visualization
-Probability & Statistics
-Importing & Cleaning Data</p>
+1. Data Manipulation
+2. Data Visualization
+3. Probability & Statistics
+4. Importing & Cleaning Data</p>
 <br>
   
 <details>
