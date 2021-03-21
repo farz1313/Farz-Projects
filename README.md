@@ -90,7 +90,29 @@ Used EDA to analyse the patterns present in the data to ensure that the applican
 Business Goal- I modeled the price of cars with the available independent variables. It was used by the management to understand how exactly the prices vary with the independent variables. They can accordingly manipulate the design of the cars, the business strategy etc. to meet certain price levels. Further, the model will be a good way for management to understand the pricing dynamics of a new market.
 
 </p>
+</br>
 </details>
+
+<details>
+<summary>EXTRACT STOCK SENTIMENT FROM NEWS HEADLINES</summary>
+  <br>
+  Topics <br>
+Data Manipulation
+Data Visualization
+Probability & Statistics
+Importing & Cleaning Data</p>
+<br>
+ 
+<summary>Project Description</summary>
+<p> 
+  In this project, I investigated insight by applying sentiment analysis on financial news headlines from Finviz. Understood the emotion behind the headlines and predict whether the market feels good or bad about a stock.
+
+The datasets used in this project were raw HTML files for the Facebook (FB) and Tesla (TSLA) stocks from FINVIZ.com, a popular website dedicated to stock information and news.
+    
+</p>
+</details>
+
+
 
 <details>
 <summary> PROJECT: THE HOTTEST TOPICS IN MACHINE LEARNING</summary>
