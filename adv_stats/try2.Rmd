@@ -1,0 +1,511 @@
+---
+title: "Advanced Statistics- Investigation of knowledge and skill development in a lifetime"
+author: Farzana Patel
+output: html_notebook
+---
+
+
+## Background
+
+  A group of researchers at the University of Sheffield, self-named “Practitioners”, investigate how people develop skills and knowledge throughout their lifetime. They are interested in understanding skill acquisition and focus on collecting and analysing data that can reveal underlying factors that influence this process. In a set of studies, Practitioners focused on the acquisition of language skills in toddlers. In particular, they investigated how language exposure impacts later linguistic skills, cognitive abilities, and academic achievement. In this knowledge assessment, you are part of the Practitioners team. The goal is to make several models, which quantify and test postulated theoretical assumptions.
+Previous studies in language acquisition showed that language skills depend on the richness of the environment as well as number of other factors. In the case of this exam, we will focus on the question of how people learn language and whether this influences other outcomes, such as university enrollment.  
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(tidyr)
+require('tidySEM')
+require(lavaan)
+library(statmod)
+library(semPlot)
+```
+
+```{r}
+# Checking summary of dataframes
+summary(LexicalDec)
+summary(Lexicon)
+```
+
+## Study 1
+
+  In the case of the first study, Practitioners would like to re-analyse previously collected data. This data set collects measures of vocabulary size - approximation of how many English words each toddler knows, socioeconomic status of the family in which the toddlers are growing up (high and low), father and mother’s vocabulary size, and time that parents spend reading to toddlers. They formed several hypothetical assumptions:
+
+## Question : 
+
+Specify and estimate a linear model that tests for the research questions postulated by the “Practitioners” team. 
+
+
+```{r}
+model1 <- lm(ToddlerVocab ~ MotherVocab, data = Lexicon)
+summary(model1)
+
+model2 <- lm(ToddlerVocab ~ FatherVocab, data = Lexicon)
+summary(model2)
+
+#First model
+model3 <- lm(ToddlerVocab ~ MotherVocab*FatherVocab, data = Lexicon)
+summary(model3)
+
+#Second model
+modelvoc <- lm(ToddlerVocab ~ ReadingTime, data = Lexicon)
+summary(modelvoc)
+
+#Third model
+model_ses <- lm(ToddlerVocab ~ ReadingTime:SES, data= Lexicon)
+summary(model_ses)
+
+# Checking model differences
+anova(modelvoc,model_ses)
+
+# Checking model differences
+anova(model3,modelvoc,model_ses)
+```
+
+```{r}
+#Final model
+model_ses_final <- lm(ToddlerVocab ~ MotherVocab + FatherVocab + ReadingTime*SES,  data=Lexicon)
+summary(model_ses_final)
+
+```
+#### Plotting the model
+
+```{r }
+plot(model_ses_final)
+```
+
+> A linear model was suitable here because the hypothesized relationship suggested linear relationship between predictors and the response. I took an iterative approach to check models by adding variables in every model and compare the significance to keep the ones that explains variance significantly.   
+  Model1  
+ model3 <- lm(ToddlerVocab ~ MotherVocab*FatherVocab, data = Lexicon)  
+ I decided to include MotherVocab and FatherVocab as the hypothesis stated that toddlers with higher vocabulary sizes will also have parents with stronger linguistic abilities. The main effect plus interaction does explain a significant of variance.   
+  Model2  
+ modelvoc <- lm(ToddlerVocab ~ ReadingTime, data = Lexicon)  
+ As toddlers that might spend more time reading will have higher vocabulary size, I checked how the main effect of ReadingTime.  
+  Model 3  
+ model_ses <- lm(ToddlerVocab ~ ReadingTime:SES, data= Lexicon)  
+ As the hypothesis stated effect of Reading time will depend on SES levels of the toddlers, I checked out the main effect and interaction terms of terms. Here, effect of reading time (ReadingTime) will be moderated by socioeconomic status (SES), where toddlers in more affluent families benefit more from reading time.    
+  Final Model    
+ lm(ToddlerVocab ~ MotherVocab + FatherVocab + ReadingTime*SES,  data=Lexicon)    
+ Hence, I decided to include main effect of MotherVocab and FatherVocab as well as, main and iterative effect of ReadingTime and SES in tandem with the hypothesized relationships along with the theoretical support of above model evaluations.  The interaction effect will let me check if the relationship changes depending on the level of SES, that will in turn test the hypothesis if relationship between ReadingTime, ToddlerVocab will be higher for toddlers with high SES. 
+
+***
+
+## Study 2
+
+The Practitioners team collected additional information for the next three research questions. The toddlers from the original study are now young adults, and Practitioners contacted them to collect additional information, such as measures of verbal abilities (verbal intelligence), reading comprehension performance, and finally, whether they enrolled at the University. For the second research project, Practitioners would like to focus on testing predictions from two theoretical frameworks that argue for nature or nurture mechanistic pathways in learning verbal behaviour.
+The Verbal nurturing theory states that practice is the main important factor, where reading time influences vocabulary size, which results in better reading comprehension outcomes (see Figure 1). The claims from the verbal nurturing theory are illustrated using a direct pathway c, from Reading time to Reading comprehension and indirect pathways a (from Reading time to Vocabulary size) and b (from Vocabulary size to Reading Comprehension).    
+The Verbal nature theory assumes individual differences in the verbal capabilities of people. It argues that verbal talent (Verbal ability) is the main factor that influences Vocabulary size and consequently results in better reading comprehension outcomes (see Figure 1). The claims from Verbal nature theory are illustrated using direct pathway e (from Verbal ability to Reading comprehension), and indirect pathways d (from Verbal ability to Vocabulary size) and b (from Vocabulary size to Reading comprehension). The Verbal nature theory also assumes that Verbal ability directly influences Reading time, but they do not expect the existence of any indirect effects over Reading time. This is illustrated as a pathway k.  
+Practitioners would like to specify a path model that tests for the proposed pathways by the two theories. To be able to do so, you need to specify two indirect effects: indirect effect 1 for Verbal nurturing theory and indirect effect 2 for Verbal nature theory, as well as two total effects, that is combinations of relevant direct and indirect effects.
+
+### Question : 
+Specify and estimate a path model that tests the proposed pathways postulated by the “Practitioners” team. 
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(tidyr)
+require('tidySEM')
+require(lavaan)
+library(statmod)
+library(semPlot)
+require('tidySEM')
+path_model1 ="
+ToddlerVocab ~ a*ReadingTime
+ReadingComprehension ~ b*ToddlerVocab
+ReadingComprehension ~ c*ReadingTime
+ToddlerVocab ~ d*VerbalAbility
+ReadingComprehension ~ e*VerbalAbility
+ReadingTime ~ k*VerbalAbility
+ind1 := a*b
+tot1 := c+(a*b)
+ind2 := d*b
+tot2 := e+(d*b)
+"
+fit_path_model= sem(path_model1, data = Lexicon)
+summary(fit_path_model, fit.measures=T, standardized=T)
+```
+```{r}
+#plotting path model
+graph_sem(fit_path_model, variance_diameter=.2)
+```
+```{r}
+# Checking summary
+summary(fit_path_model, fit.measures=T, standardized=T)
+```
+
+```{r}
+# Checking if models are identical
+identical(summary(fit_path_model),summary(fit_path_model, fit.measures=T, standardized=T))
+
+```
+```{r, fig.align='center'}
+# Making path model 2
+path_model2 ="
+ToddlerVocab ~ a*ReadingTime
+ReadingComprehension ~ b*ToddlerVocab
+ReadingComprehension ~ c*ReadingTime
+ind1 := a*b
+tot1 := c+(a*b)
+"
+fit_path_model2= sem(path_model2, data = Lexicon)
+graph_sem(fit_path_model2, variance_diameter=.2)
+
+```
+```{r}
+# Checking summary of model 2
+summary(fit_path_model2, fit.measures=T, standardized=T)
+```
+
+```{r}
+#install.packages("statmod")
+library(statmod)
+
+#install.packages("semPlot")
+library(semPlot)
+
+semPaths(fit_path_model2, 'model','est', edge.label.cex = 1.1)
+```
+```{r}
+# Creating path model 3
+path_model3 ="
+ToddlerVocab ~ a*ReadingTime
+ReadingComprehension ~ b*ToddlerVocab
+ReadingComprehension ~ c*ReadingTime
+ToddlerVocab ~ 0*VerbalAbility
+ReadingComprehension ~ e*VerbalAbility
+ReadingTime ~ k*VerbalAbility
+ind1 := a*b
+tot1 := c+(a*b)
+ind2 := 0*b
+tot2 := e+(0*b)
+"
+fit_path_model3= sem(path_model3, data = Lexicon)
+summary(fit_path_model3, fit.measures=T, standardized=T)
+```
+
+```{r}
+semPaths(fit_path_model3, 'model','est', edge.label.cex = 1.1)
+```
+
+```{r}
+# Comparing models
+require(semTools)
+diff<-compareFit(fit_path_model,fit_path_model3)
+summary(diff)
+```
+> I used structural equation model (SEM) as it evaluates complex connected relationships very well.   
+
+***
+
+## Study 3
+
+For the third research project, Practitioners would like to focus on the information behind university enrollment. For each participant, they recorded whether they enrolled at University (1 – yes, 0 – no). Practitioners would like to build a model that tests which variables are predictive of enrollment status. They aim to use the initially collected variables from when the participants were toddlers, such as mothers’, fathers’ and toddlers’ vocabulary size, as well as reading time and socioeconomic status. If this type of model works well to predict distal outcomes, such as university enrollment, we can use this information and improve behaviour that leads to more positive outcomes (enrolling at the university).    
+
+### Question : 
+
+Specify the statistical model that tests which factors are predictive of University enrollment.  
+```{r}
+# Fixing the non-normal datapoints
+Q <- quantile(Lexicon$FatherVocab, probs = c(.25,.75), na.rm = FALSE)
+iqr<- IQR(Lexicon$FatherVocab)
+up<- Q[2]+1.5*iqr
+down<- Q[1]-1.5*iqr
+
+Lexi_normal<- subset(Lexicon, Lexicon$FatherVocab > (Q[1]-1.5*iqr) & Lexicon$FatherVocab < (Q[2]+1.5*iqr))
+
+```
+
+```{r}
+# Define full and null models and do step procedure
+model.null = glm(Enrollment ~ 1,
+                 data=Lexi_normal,
+                 family = binomial(link="logit")
+)
+model.full = glm(Enrollment~SES + FatherVocab + MotherVocab + ToddlerVocab + ReadingTime + VerbalAbility + ReadingComprehension + Orthography + Morphology + Phonetics + Syntax + Pragmatics,
+                 data=Lexi_normal,
+                 family = binomial(link="logit")
+)
+step(model.null,
+     scope = list(upper=model.full),
+     direction="both",
+     test="Chisq",
+     data=Lexi_normal)
+```
+
+### Final model
+```{r}
+#Final model
+model.final =glm(formula = Enrollment ~ SES + ReadingTime + ToddlerVocab, 
+                 family = binomial(link = "logit"), data = Lexi_normal)
+
+summary(model.final)
+```
+
+```{r}
+#Checking for correlation
+df_glm <- Lexi_normal[,c("ToddlerVocab", "ReadingTime" )]
+library("PerformanceAnalytics")
+chart.Correlation(df_glm, histogram=TRUE, pch=19)
+```
+
+```{r}
+#Analysis of variance for individual terms
+#install.packages("car")
+library(car)
+Anova(model.final, type="II", test="Wald")
+```
+
+```{r}
+#Pseudo-R-squared
+#install.packages("rcompanion")
+library(rcompanion)
+nagelkerke(model.final)
+```
+
+```{r}
+#odds ratio
+#install.packages("broom")
+library(broom)
+tidy(model.final, exponentiate = T, conf.int = T)
+
+```
+> The odds-ratio was >1, so having more SES, ReadingTime and ToddlerVocab increased the chance of enrollment.
+ The confidence interval for SES, ReadingTime and ToddlerVocab does not includes 1.0 so the results are statistically significant.
+
+```{r, fig.height=25}
+Lexi_normal$probability = predict(model.final,newdata = NULL, type = 'response')
+pairs.panels(Lexi_normal)
+```
+
+```{r}
+Lexi_normal$probability <- ifelse(Lexi_normal$probability>0.5,1,0)
+```
+
+```{r}
+# making a confusion matrix
+cm<-table(col=Lexi_normal$Enrollment,Lexi_normal$probability)
+print(cm)
+```
+
+```{r}
+sum(diag(cm))/sum(colSums(cm))
+#install.packages("caret")
+library(caret)
+
+# checking precision n f1-score
+confusionMatrix(cm, mode = "prec_recall")
+```
+
+```{r}
+#confidence intervals
+exp(confint(model.final))
+```
+> I used generalized linear model with binomial family as the dependent variable (Enrollment) is binary and predictors (SES, ReadingTime and ToddlerVocab) confirm normality distribution. I’ve used a stepwise procedure using the step function that selects models to minimize AIC to arrive at this specification. As the predictors have low correlation (0.26), any order gives the same result.  
+
+
+***
+
+## Study 4
+
+In their previous work, Practitioners developed a questionnaire to investigate levels of language expertise. The questionnaire collects six measures, each focusing on a specific level of language processing: orthography, phonetics, morphology, syntax, semantics, pragmatics. When investigating the latent structure of this questionnaire, Practitioners proposed a two-factor solution. The first factor was described as Rule automatization, with orthography, phonetics and morphology highly loaded on it. The second factor was described as Fine expertise with knowledge of syntax, semantics, and pragmatics highly loading on it.  
+In the case of this research project, Practitioners used our participants to resample indices of language expertise. In other words, they collected additional measures of language performance using their questionnaire. In the case of the fourth study, they aimed to validate their proposed two-factor solution for this questionnaire and planned to run a confirmatory factor analysis on this data. Can you help them with this goal?  
+
+### Question :
+
+Specify and estimate a confirmatory factor model that tests the proposed latent structure. NOTE: use scaling of the variance to 1 for the latent factor structure.   
+
+```{r}
+library(lavaan)
+library(psych)
+scatter.hist(x=Lexicon$Orthography, y=Lexicon$Semantics, density=T, ellipse=T)
+
+```
+
+```{r}
+
+fa1 ='
+RuleAutomization=~ NA*Orthography + Phonetics + Morphology
+FineExpertise=~ NA*Syntax + Semantics + Pragmatics
+RuleAutomization ~~ 1*RuleAutomization
+FineExpertise ~~ 1*FineExpertise
+'
+
+cfa1 = cfa(fa1, data=Lexicon)
+
+summary(cfa1, standardize=TRUE, fit.measures=TRUE)
+
+lavPredict(cfa1) 
+```
+
+```{r}
+#Lexicon$probability <- predict(cfa1 , newdata = NULL, type = "response")
+
+fitMIM = cfa(fa1, data=Lexicon, group = 'SES', group.equal='loadings')
+summary(fitMIM)
+
+```
+
+```{r}
+fitMIC <- cfa(fa1, data = Lexicon, group = 'SES') 
+summary(fitMIC)
+```
+
+```{r}
+library(semTools)
+summary(compareFit(fitMIM,fitMIC))
+```
+
+***
+
+## Study 5
+
+In the last step of data collection, Practitioners created an experimental study to investigate the cognitive processing of different words. In particular, they focused on the processing of cognates versus non-cognates. Cognates are words that have a common etymological origin as words in other languages (e.g., English: starve and German: sterben). Practitioners randomly choose 100 participants from their original sample and presented them with a lexical decision task. In this task, participants are presented with a string of letters, and they are asked to indicate whether this string of letters is a real word (e.g., starve) versus a non-word (e.g., snepd) as quickly and as accurately as possible. Each participant was presented with 100 strings, half of which were words. More importantly, practitioners manipulated cognate status within those 50 words, thus 25 words were cognates and 25 words were non-cognates. In the case of this analysis, Practitioners would like you to focus only on the speed of processing of these real words, measured as a reaction time in milliseconds. Smaller reaction times indicate faster processing, which is potentially important cognitive status of cognates. Can you analyse this experimental data and inform Practitioners whether cognates elicit faster processing times in comparison to the non-cognate words?  
+In the second dataset (LexicalDec), you can find all the collected information. Column ID indicates repeated measurements for each subject, item_id indicates repeated measurements for each item, WordType shows whether words were cognates or non-cognates, and RT (reaction time) shows how fast participants answered the question about whether the presented string of letters was a word or a non-word. Practitioners also added other information to this dataset, such as mother and father’s vocabulary size, time spent reading and estimated vocabulary size while our participants were toddlers. Using this data, build a model that accounts for the repeated measurements (clustered observations) and tests the effects of type of words. You can also use additional measures to control for the effects of vocabulary size and time spent reading. 
+
+### Question: 
+
+Specify the statistical model that tests the effect of type of words on reaction time.  
+```{r}
+library(lme4)
+#install.packages("lmerTest")
+library(lmerTest)
+#install.packages("sjPlot")
+require(sjPlot)
+#install.packages("glmmTMB")
+library(glmmTMB)
+#install.packages("merTools")
+library('merTools')
+#install.packages("jtools")
+library(jtools)
+
+ggplot(data = LexicalDec, aes(item_id, RT, group=ID))+geom_line()+geom_point()
+
+```
+
+```{r}
+# Null model
+m_0 = lmer(RT~1 + (1|ID) + (1|item_id), REML= FALSE, data=LexicalDec)
+summary(m_0) #checking summary
+confint(m_0) #checking confidence intervals
+summ(m_0)    #checking lmer summary
+ranova(m_0)  #implementing ranova
+```
+
+```{r}
+# Model 1
+m_1 = lmer(RT~1 + WordType  + (1|ID) + (1|item_id), REML= FALSE, data=LexicalDec)
+summary(m_1)
+confint(m_1)
+summ(m_1)
+ranova(m_1)
+```
+
+```{r}
+#ICC
+ICC(outcome = "RT", group = c("ID", "item_id"), data = LexicalDec)
+```
+
+```{r}
+# Model 2
+m_2 = lmer(RT~1 + WordType + ReadingTime + (1|ID) + (1|item_id),REML= FALSE, data=LexicalDec)
+summary(m_2)
+confint(m_2)
+summ(m_2)
+ranova(m_2)
+```
+
+```{r}
+# Model 3
+m_3 = lmer(RT~1 + WordType + ReadingTime + ToddlerVocab + (1|ID) + (1|item_id),REML= FALSE, data=LexicalDec)
+summary(m_3)
+confint(m_3)
+```
+```{r}
+# Model 4
+m_4 = lmer(RT~1 + WordType + ReadingTime + ToddlerVocab + (1|ID) + (1|item_id) + MotherVocab,REML= FALSE, data=LexicalDec)
+summary(m_4)
+anova(m_3, m_4)
+summ(m_4)
+ranova(m_4)
+```
+
+```{r}
+# Model 5
+m_5 = lmer(RT~1 + WordType + ReadingTime + ToddlerVocab + (1|ID) + (1|item_id) + MotherVocab + FatherVocab ,REML= FALSE, data=LexicalDec)
+summary(m_5)
+summ(m_5)
+ranova(m_5)
+```
+
+```{r}
+# Selecting m_3 as final model
+library("ggplot2")
+plot_model(m_3, type='re', sort.est = 'sort.all', grid = FALSE)
+```
+
+```{r}
+# checking summary for model 3
+summ(m_3)
+ranova(m_3)
+
+#checking coeff
+coef(summary(m_3))
+
+VarCorr(m_3)
+
+# converting to str to plot 
+str(resid(m_3))
+```
+
+```{r}
+plot(fitted(m_3), resid(m_3, type = "pearson"))# this will create the plot
+abline(0,0, col="red")
+```
+
+```{r}
+qqnorm(resid(m_3)) 
+qqline(resid(m_3), col = "red") # add a perfect fit line
+```
+
+```{r}
+# lattice plot
+require(lattice)
+dotplot(ranef(m_3, condVar=TRUE))
+```
+
+```{r}
+print(dotplot(ranef(m_3,condVar=TRUE))$ID)
+```
+
+```{r}
+# Checking random effect
+ranef(m_3)
+
+```
+
+```{r}
+#install.packages("MuMIn")
+require(MuMIn)
+r.squaredGLMM(m_3)
+```
+>I’ve used mixed effect model with partial pooling, as the data was multilevel and the ICC score gave substantial evidence of clustering. I used 3 predictors (WordType, ReadingTime and ToddlerVocab) and added 2 random effects (participant ID and itemID). As the data points varied a lot along this axis, I assumed that the main source of a random variation is Participant ID. I added the random effect of item_id too. Additionally, with iterative process I chose a model that controlled for the effect of ReadingTime and ToddlerVocab to measure the effect of WordType.  
+I considered the listed hypothesis to evaluate the models-  
+H0: No difference exists  
+Ha: A difference exists  
+Formula:  
+mult1 = lmer(RT~WordType + ReadingTime + ToddlerVocab + (1|ID) + (1|item_id), data=LexicalDec)
+
+***
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
